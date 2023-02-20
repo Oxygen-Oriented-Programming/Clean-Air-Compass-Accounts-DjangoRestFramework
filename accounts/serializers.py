@@ -1,6 +1,6 @@
 from django.conf import settings
 from rest_framework import serializers
-from library.sociallib import github
+from library.socaillib import github
 from library.register.register import register_social_user
 from rest_framework.exceptions import *
 
