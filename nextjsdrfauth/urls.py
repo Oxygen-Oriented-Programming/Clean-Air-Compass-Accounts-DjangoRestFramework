@@ -1,4 +1,4 @@
-# """nextjsdrfbackend URL Configuration
+# """nextjsdrfauth URL Configuration
 
 # The `urlpatterns` list routes URLs to views. For more information please see:
 #     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -13,11 +13,9 @@
 #     1. Import the include() function: from django.urls import include, path
 #     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 # """
-# from django.contrib import admin
 # from django.urls import path, include
+# from .views import GoogleLoginView
 
 # urlpatterns = [
-#     path("admin/", admin.site.urls),
-#     path("api/auth", include("dj_rest_auth.urls")),
-#     path("api/social/login/", include("nextjsdrfauth.urls")),
+#     path("google/", GoogleLoginView.as_view(), name="google"),
 # ]
