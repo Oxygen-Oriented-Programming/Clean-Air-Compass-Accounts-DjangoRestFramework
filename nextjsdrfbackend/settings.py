@@ -40,11 +40,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # third party apps
     "rest_framework",
-    "framework authtoken",
+    "rest_framework.authtoken",
     "corsheaders",
     "django.contrib.sites",
     # authentication
-    "django_rest_auth",
+    "dj_rest_auth",
     "dj_rest_auth.registration",
     "allauth",
     "allauth.account",
@@ -97,7 +97,7 @@ SIMPLE_JWT = {
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-AUTH_USER_MODEL = "nextjsdrfauth. CustomUserModel"
+AUTH_USER_MODEL = "nextjsdrfauth.CustomUserModel"
 
 REST_AUTH_SERIALIZERS = {
     "USER_DETAILS_SERIALIZER": "nextjsdrfauth.serializers.CustomUserSerializer",
