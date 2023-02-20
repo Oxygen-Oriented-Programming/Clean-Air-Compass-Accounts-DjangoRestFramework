@@ -6,6 +6,7 @@ ENV/
 .idea
 .DS_Store
 .history
+.venv
 
 
 # Byte-compiled / optimized / DLL files
