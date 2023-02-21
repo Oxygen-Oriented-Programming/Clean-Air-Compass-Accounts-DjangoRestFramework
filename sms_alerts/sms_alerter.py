@@ -18,6 +18,7 @@
 
 import os
 import requests
+import json
 from .models import SmsAlert
 from twilio.rest import Client
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -26,9 +27,9 @@ scheduler = BlockingScheduler()
 account_sid = os.environ.get("TWILIO_ACCOUNT_SID", "")
 auth_token = os.environ.get("TWILIO_AUTH_TOKEN", "")
 twilio_phone_number = os.environ.get("TWILIO_PHONE_NUMBER")
+all_sms_alerts = SmsAlert.objects.all()
 location_iq_api_key = "pk.9cf87dc8f1dbe00e1926e39226ed2608" #os.environ.get("LOCATION_IQ_API_KEY")
 
-all_sms_alerts = SmsAlert.objects.all()
 
 @scheduler.scheduled_job('interval', hours=1)
 def run_script():
@@ -62,12 +63,14 @@ def run_script():
         }
 
         response = requests.get(url, params=data)
-        print(response.text)
-        return response.text
+        data = response.json()
+        lat = data[0]["lat"]
+        lon = data[0]["lon"]
+        return (lat, lon)
         
 
     # Query PurpleAir API and get sensor data
-    def query_purple_air_api(lat, long):
+    def query_purple_air_api(lat, lon):
         # Pass parameters
         # Return latest PM2.5 numbers
         pass
@@ -104,7 +107,7 @@ def run_script():
         print(e)
 scheduler.start()
 
-if __name__ == "__main__":
-    print(location_iq_api_key)
-    response = query_location_iq_api("Seattle")
-    print(response)
+# if __name__ == "__main__":
+#     print(location_iq_api_key)
+#     response = query_location_iq_api("Seattle")
+#     print(response[0], response[1])
