@@ -13,6 +13,7 @@ from django.contrib.auth.models import AbstractUser
 # This table is used for signup, login, and authentication process.
 class User(AbstractUser):
     email = models.EmailField(unique=True)
+    phone_number = models.CharField(max_length=20, blank=True)
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=50, blank=True)
@@ -26,3 +27,10 @@ class User(AbstractUser):
     role = models.CharField(max_length=100, default="normal")
     status = models.CharField(max_length=100, default="Active")
     auth_provider = models.CharField(max_length=50, blank=True, default="email")
+
+    def __str__(self):
+            return f"{self.first_name} {self.last_name}"
+
+    class Meta:
+        ordering = ['last_name', 'first_name']
+        verbose_name_plural = 'users'
