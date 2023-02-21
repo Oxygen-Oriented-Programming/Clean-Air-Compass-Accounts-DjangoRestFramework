@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,6 +28,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+# Twilio Variables
+TWILIO_ACCOUNT_SID=os.environ.get("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN=os.environ.get("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER=os.environ.get("TWILIO_PHONE_NUMBER")
 
 # Application definition
 
@@ -37,6 +42,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_twilio",
     "accounts",
     "sms_alerts",
     "rest_framework",

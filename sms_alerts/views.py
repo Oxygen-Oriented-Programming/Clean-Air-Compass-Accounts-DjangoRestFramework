@@ -5,7 +5,6 @@ from rest_framework.generics import (
 )
 from .models import SmsAlert
 from .serializers import SmsAlertSerializer
-from .forms import SmsAlertForm
 
 
 class SmsAlertList(ListCreateAPIView):
@@ -16,14 +15,3 @@ class SmsAlertList(ListCreateAPIView):
 class SmsAlertDetail(RetrieveUpdateDestroyAPIView):
     queryset = SmsAlert.objects.all()
     serializer_class = SmsAlertSerializer
-
-
-def create_sms_alert(request):
-    if request.method == 'POST':
-        form = SmsAlertForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('')
-    else:
-        form = SmsAlertForm()
-    return render(request, '', {'form': form})
