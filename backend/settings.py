@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "sms_alerts",
     "rest_framework",
     "rest_framework.authtoken",
+    "default_locations",
 ]
 
 MIDDLEWARE = [

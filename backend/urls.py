@@ -20,4 +20,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),
     path("api/v1/sms_alerts/", include("sms_alerts.urls")),
+    path("default_locations/", include("default_locations.urls")),
 ]
