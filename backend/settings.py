@@ -34,6 +34,7 @@ env = environ.Env(
     TWILIO_AUTH_TOKEN=(str, ""),
     TWILIO_PHONE_NUMBER=(str, ""),
     LOCATION_IQ_API_KEY=(str, ""),
+    PURPLE_AIR_API_READ_KEY=(str, ""),
 )
 
 environ.Env.read_env()
@@ -46,6 +47,9 @@ TWILIO_PHONE_NUMBER=env.str("TWILIO_PHONE_NUMBER")
 # LocationIQ
 LOCATION_IQ_API_KEY=env.str("LOCATION_IQ_API_KEY")
 
+# PurpleAir API
+PURPLE_AIR_API_READ_KEY=env.str("PURPLE_AIR_API_READ_KEY")
+
 
 # Application definition
 
@@ -57,6 +61,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_twilio",
+    "django_apscheduler",
     "accounts",
     "sms_alerts",
     "rest_framework",
@@ -66,13 +71,13 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "corsheaders.middleware.CorsMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = "backend.urls"
@@ -155,3 +160,5 @@ SOCIAL_SECRET = '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'
 CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = "accounts.User"
+
+SCHEDULER_AUTOSTART = True
