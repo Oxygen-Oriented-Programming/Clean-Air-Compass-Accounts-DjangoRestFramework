@@ -1,10 +1,9 @@
 import requests
+from textwrap import dedent
 from django.conf import settings
 from .models import SmsAlert
 from twilio.rest import Client
-# from apscheduler.schedulers.background import BackgroundScheduler
 
-# scheduler = BackgroundScheduler()
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 twilio_phone_number = settings.TWILIO_PHONE_NUMBER
@@ -16,7 +15,10 @@ def send_alert(alert, aqi_level):
     phone_number = alert.phone_number
     
     # Construct the message
-    message = f"Air quality in {alert.location} is now {aqi_level}."
+    message = dedent(f"""
+        Air quality in {alert.location} is now {aqi_level[0]}.
+        {aqi_level[1]}
+    """)
     
     # Send the message using Twilio or another SMS service
 
@@ -41,17 +43,17 @@ def query_fast_api(location):
 # Get AQI Level
 def get_aqi_level(pm_25):
     if pm_25 <= 12.0:
-        return "Good"
+        return ("Good", "Air quality is satisfactory and poses little or no risk.")
     elif pm_25 >12.0 and pm_25 <= 35.4:
-        return "Moderate"
+        return ("Moderate", "Sensitive individuals should avoid outdoor activity.")
     elif pm_25 >35.4 and pm_25 <= 55.4:
-        return "Unhealthy for Sensitive Groups"
+        return ("Unhealthy for Sensitive Groups", "General public and sensitive individuals in particular are at risk of respiratory problems.")
     elif pm_25 >55.4 and pm_25 <= 150.4:
-        return "Unhealthy"
+        return ("Unhealthy", "Increased likelihood of adverse effects to heart and lungs among the general public.")
     elif pm_25 >150.4 and pm_25 <= 250.4:
-        return "Very Unhealthy"
+        return ("Very Unhealthy", "General public will be noticeably affected. Restrict outdoor activities.")
     else:
-        return "Hazardous"
+        return ("Hazardous", "General public at high risk of strong adverse affect to heart and lungs. Avoid outdoor activities.")
 
 def run_script():
     try:
