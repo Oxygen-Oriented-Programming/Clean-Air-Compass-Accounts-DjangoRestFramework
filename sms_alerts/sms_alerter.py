@@ -10,7 +10,7 @@ twilio_phone_number = settings.TWILIO_PHONE_NUMBER
 all_sms_alerts = SmsAlert.objects.all()
 
 def send_alert(alert, aqi_level):
-    
+    print("Preparing Message")
     # Get the user's phone number
     phone_number = alert.phone_number
     
@@ -28,6 +28,7 @@ def send_alert(alert, aqi_level):
         from_= twilio_phone_number ,
         to=phone_number
     )
+    print("Message Sent")
     return message.sid
 
 # Query LocationIQ API and get lat/long
@@ -57,18 +58,23 @@ def get_aqi_level(pm_25):
 
 def run_script():
     try:
-        print('starting program')
+        print('starting run_script')
         for alert in all_sms_alerts:
             print(alert)
+            print(alert.previous_air_quality_threshold_alert)
             location = alert.location
             latest_pm_25 = query_fast_api(location)
             aqi_level = get_aqi_level(latest_pm_25)
-
-            if not aqi_level == alert.previous_air_quality_threshold_alert:
+            print(aqi_level, alert.previous_air_quality_threshold_alert)
+            if aqi_level != alert.previous_air_quality_threshold_alert:
+                print("Updating AQI in database")
                 alert.previous_air_quality_threshold_alert = aqi_level
                 alert.save()
 
+                print("sending message")
                 send_alert(alert, aqi_level)
+                print("message sent")
+            print("next alert")
     
     except Exception as e:
         print(e)

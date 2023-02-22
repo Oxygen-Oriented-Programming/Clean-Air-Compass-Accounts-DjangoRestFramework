@@ -11,18 +11,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 import os
-from pathlib import Path
 import environ
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-
-# SECURITY WARNING: don't run with debug turned on in production!
 
 ALLOWED_HOSTS = ["*"]
 
@@ -32,6 +23,8 @@ env = environ.Env(
     TWILIO_ACCOUNT_SID=(str, ""),
     TWILIO_AUTH_TOKEN=(str, ""),
     TWILIO_PHONE_NUMBER=(str, ""),
+    GOOGLE_CLIENT_ID=(str, ""),
+    SOCIAL_SECRET=(str, ""),
 )
 
 environ.Env.read_env()
@@ -42,6 +35,10 @@ DEBUG=env.bool("DEBUG")
 TWILIO_ACCOUNT_SID=env.str("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN=env.str("TWILIO_AUTH_TOKEN")
 TWILIO_PHONE_NUMBER=env.str("TWILIO_PHONE_NUMBER")
+
+# NextAuth Variables
+GOOGLE_CLIENT_ID=env.str("GOOGLE_CLIENT_ID")
+SOCIAL_SECRET=env.str("SOCIAL_SECRET")
 
 # Application definition
 
@@ -144,10 +141,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-GOOGLE_CLIENT_ID = '1005718204366-tbjlqqhbjor349kpshags3kedmhomul9.apps.googleusercontent.com'
-SOCIAL_SECRET = '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'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
