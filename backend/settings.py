@@ -10,10 +10,12 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import os
 from pathlib import Path
+import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # Quick-start development settings - unsuitable for production
@@ -27,6 +29,23 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+env = environ.Env(
+    TWILIO_ACCOUNT_SID=(str, ""),
+    TWILIO_AUTH_TOKEN=(str, ""),
+    TWILIO_PHONE_NUMBER=(str, ""),
+    LOCATION_IQ_API_KEY=(str, ""),
+)
+
+environ.Env.read_env()
+
+# Twilio Variables
+TWILIO_ACCOUNT_SID=env.str("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN=env.str("TWILIO_AUTH_TOKEN")
+TWILIO_PHONE_NUMBER=env.str("TWILIO_PHONE_NUMBER")
+
+# LocationIQ
+LOCATION_IQ_API_KEY=env.str("LOCATION_IQ_API_KEY")
+
 
 # Application definition
 
@@ -37,10 +56,12 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django_twilio",
     "accounts",
     "sms_alerts",
     "rest_framework",
     "rest_framework.authtoken",
+    "default_locations",
 ]
 
 MIDDLEWARE = [
@@ -81,7 +102,7 @@ WSGI_APPLICATION = "backend.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "NAME": os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
