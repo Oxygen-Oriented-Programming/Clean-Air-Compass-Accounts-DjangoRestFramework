@@ -15,82 +15,78 @@
 # use those coordinates to get sensor data for that location
 # evaluation the AQI of that area
 
-
-import os
 import requests
-import json
+from django.conf import settings
 from .models import SmsAlert
 from twilio.rest import Client
 from apscheduler.schedulers.blocking import BlockingScheduler
 
 scheduler = BlockingScheduler()
-account_sid = os.environ.get("TWILIO_ACCOUNT_SID", "")
-auth_token = os.environ.get("TWILIO_AUTH_TOKEN", "")
-twilio_phone_number = os.environ.get("TWILIO_PHONE_NUMBER")
+account_sid = settings.TWILIO_ACCOUNT_SID
+auth_token = settings.TWILIO_AUTH_TOKEN
+twilio_phone_number = settings.TWILIO_PHONE_NUMBER
 all_sms_alerts = SmsAlert.objects.all()
-location_iq_api_key = "pk.9cf87dc8f1dbe00e1926e39226ed2608" #os.environ.get("LOCATION_IQ_API_KEY")
+location_iq_api_key =  settings.LOCATION_IQ_API_KEY
 
+def send_alert(alert, aqi_level):
+    
+    # Get the user's phone number
+    phone_number = alert.phone_number
+    
+    # Construct the message
+    message = f"Air quality in {alert.location} is now {aqi_level}."
+    
+    # Send the message using Twilio or another SMS service
+
+    client = Client(account_sid, auth_token)
+    message = client.messages.create(
+        body=message,
+        from_= twilio_phone_number ,
+        to=phone_number
+    )
+    return message.sid
+
+# Query LocationIQ API and get lat/long
+def query_location_iq_api(location):
+
+    url = "https://us1.locationiq.com/v1/search"
+
+    data = {
+        'key': location_iq_api_key,
+        'q': location,
+        'format': 'json'
+    }
+
+    response = requests.get(url, params=data)
+    data = response.json()
+    lat = data[0]["lat"]
+    lon = data[0]["lon"]
+    return (lat, lon)
+    
+
+# Query PurpleAir API and get sensor data
+def query_purple_air_api(lat, lon):
+    # Pass parameters
+    # Return latest PM2.5 numbers
+    pass
+
+# Get AQI Level
+def get_aqi_level(pm_25):
+    if pm_25 <= 12.0:
+        return "Good"
+    elif pm_25 >12.0 and pm_25 <= 35.4:
+        return "Moderate"
+    elif pm_25 >35.4 and pm_25 <= 55.4:
+        return "Unhealthy for Sensitive Groups"
+    elif pm_25 >55.4 and pm_25 <= 150.4:
+        return "Unhealthy"
+    elif pm_25 >150.4 and pm_25 <= 250.4:
+        return "Very Unhealthy"
+    else:
+        return "Hazardous"
 
 @scheduler.scheduled_job('interval', hours=1)
 def run_script():
-    def send_alert(alert, aqi_level):
-        
-        # Get the user's phone number
-        phone_number = alert.phone_number
-        
-        # Construct the message
-        message = f"Air quality in {alert.location} is now {aqi_level}."
-        
-        # Send the message using Twilio or another SMS service
-
-        client = Client(account_sid, auth_token)
-        message = client.messages.create(
-            body=message,
-            from_= twilio_phone_number ,
-            to=phone_number
-        )
-        return message.sid
-
-    # Query LocationIQ API and get lat/long
-    def query_location_iq_api(location):
-
-        url = "https://us1.locationiq.com/v1/search"
-
-        data = {
-            'key': location_iq_api_key,
-            'q': location,
-            'format': 'json'
-        }
-
-        response = requests.get(url, params=data)
-        data = response.json()
-        lat = data[0]["lat"]
-        lon = data[0]["lon"]
-        return (lat, lon)
-        
-
-    # Query PurpleAir API and get sensor data
-    def query_purple_air_api(lat, lon):
-        # Pass parameters
-        # Return latest PM2.5 numbers
-        pass
-
-    # Get AQI Level
-    def get_aqi_level(pm_25):
-        if pm_25 <= 12.0:
-            return "Good"
-        elif pm_25 >12.0 and pm_25 <= 35.4:
-            return "Moderate"
-        elif pm_25 >35.4 and pm_25 <= 55.4:
-            return "Unhealthy for Sensitive Groups"
-        elif pm_25 >55.4 and pm_25 <= 150.4:
-            return "Unhealthy"
-        elif pm_25 >150.4 and pm_25 <= 250.4:
-            return "Very Unhealthy"
-        else:
-            return "Hazardous"
-
-
     try:
         for alert in all_sms_alerts:
             location = alert.location
@@ -107,7 +103,6 @@ def run_script():
         print(e)
 scheduler.start()
 
-# if __name__ == "__main__":
-#     print(location_iq_api_key)
-#     response = query_location_iq_api("Seattle")
-#     print(response[0], response[1])
+if __name__ == "__main__":
+    response = query_location_iq_api("Seattle")
+    print(response[0], response[1])
