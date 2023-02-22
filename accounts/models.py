@@ -13,7 +13,6 @@ from django.contrib.auth.models import AbstractUser
 # This table is used for signup, login, and authentication process.
 class User(AbstractUser):
     email = models.EmailField(unique=True)
-    opt_in_to_sms_alerts = models.BooleanField(default=False)
     phone_number = models.CharField(max_length=20, blank=True)
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
