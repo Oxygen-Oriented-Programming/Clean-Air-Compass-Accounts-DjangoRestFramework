@@ -62,9 +62,10 @@ def run_script():
             latest_pm_25 = query_fast_api(location)
             aqi_level = get_aqi_level(latest_pm_25)
 
-            if aqi_level == alert.previous_air_quality_threshold_alert:
-                continue
-            else:
+            if not aqi_level == alert.previous_air_quality_threshold_alert:
+                alert.previous_air_quality_threshold_alert = aqi_level
+                alert.save()
+
                 send_alert(alert, aqi_level)
     
     except Exception as e:
