@@ -10,11 +10,10 @@ class Google:
         """
         validate method Queries the Google oAUTH2 api to fetch the user info
         """
-        # print(auth_token)
+        print(type(auth_token))
         try:
             idinfo = id_token.verify_oauth2_token(
                 auth_token, requests.Request())
-
             if 'accounts.google.com' in idinfo['iss']:
                 return idinfo
 

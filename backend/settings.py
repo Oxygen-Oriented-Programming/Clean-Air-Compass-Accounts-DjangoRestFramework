@@ -149,8 +149,8 @@ STATIC_URL = "static/"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
-GOOGLE_CLIENT_ID = '1005718204366-tbjlqqhbjor349kpshags3kedmhomul9.apps.googleusercontent.com'
-SOCIAL_SECRET = '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'
+GOOGLE_CLIENT_ID = '319185773405-94lfgudji11fvtbrckkfsj4r7rpuaalv.apps.googleusercontent.com'
+SOCIAL_SECRET = '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'
 
 CORS_ORIGIN_ALLOW_ALL = True
 

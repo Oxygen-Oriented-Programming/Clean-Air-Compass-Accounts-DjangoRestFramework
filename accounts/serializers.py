@@ -9,14 +9,15 @@ class GoogleSocialAuthSerializer(serializers.Serializer):
     auth_token = serializers.CharField()
 
     def validate_auth_token(self, auth_token):
+        print(auth_token)
         user_data = google.Google.validate(auth_token)
+        print(user_data)
         try:
             user_data['sub']
         except:
             raise serializers.ValidationError(
                 'The token is invalid or expired. Please login again.'
             )
-        # print(user_data['sub'])
         if user_data['aud'] != settings.GOOGLE_CLIENT_ID:
 
             raise AuthenticationFailed('oops, who are you?')
