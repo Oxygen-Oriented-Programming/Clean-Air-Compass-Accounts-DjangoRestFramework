@@ -122,3 +122,8 @@ node_modules/
 
 # poetry
 poetry.lock
+
+
+#django
+
+db.sqlite3
