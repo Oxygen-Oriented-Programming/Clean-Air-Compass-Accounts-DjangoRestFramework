@@ -5,7 +5,7 @@ from accounts.models import User
 
 
 class SmsAlert(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="alerts")
     phone_number = models.CharField(max_length=20, blank=True)
     location = models.CharField(max_length=100,)
     air_quality_threshold = models.CharField(choices=[('Good','Good'), ('Moderate','Moderate'),('Unhealthy for Sensitive Groups','Unhealthy for Sensitive Groups'),('Unhealthy','Unhealthy'), ('Very Unhealthy','Very Unhealthy'),('Hazardous','Hazardous')], max_length=100)

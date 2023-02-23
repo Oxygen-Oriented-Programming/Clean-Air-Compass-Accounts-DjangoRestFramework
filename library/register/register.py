@@ -3,29 +3,33 @@ from default_locations.models import DefaultLocation
 from accounts.models import User
 from django.conf import settings
 from rest_framework.exceptions import AuthenticationFailed
+from django.core.exceptions import ObjectDoesNotExist
 
 
 def register_social_user(provider, user_id, email, name):
     filtered_user_by_email = User.objects.filter(email=email)
     if filtered_user_by_email.exists():
         if provider == filtered_user_by_email[0].auth_provider:
-            # new_user = User.objects.get(email=email)
-
             registered_user = User.objects.get(email=email)
             registered_user.check_password(settings.SOCIAL_SECRET)
-            default_location = DefaultLocation.objects.get(user=registered_user).default_location
+            default_location = None
+            alerts = None
+            try:
+                alerts = registered_user.alerts.all().values()
+                default_location = DefaultLocation.objects.get(user=registered_user).default_location
+            except ObjectDoesNotExist:
+                pass
             Token.objects.filter(user=registered_user).delete()
             Token.objects.create(user=registered_user)
             new_token = list(Token.objects.filter(
                 user_id=registered_user).values("key"))
-            print(registered_user.id)
+            print(f"alerts = {alerts}")
+            print(f"default locs = {default_location}")
             return {
                 'user_id': registered_user.id,
-                'username': registered_user.username,
                 'default_location': default_location,
-                'email': registered_user.email,
+                'alerts':alerts,
                 'tokens': str(new_token[0]['key'])}
-
         else:
             raise AuthenticationFailed(
                 detail='Please continue your login using ' + filtered_user_by_email[0].auth_provider)
