@@ -11,7 +11,6 @@ fast_api_base_url = settings.FAST_API_BASE_URL
 all_sms_alerts = SmsAlert.objects.all()
 
 def send_alert(alert, aqi_level):
-    print("Preparing Message")
     # Get the user's phone number
     phone_number = alert.phone_number
     
@@ -29,7 +28,6 @@ def send_alert(alert, aqi_level):
         from_= twilio_phone_number ,
         to=f"+1{phone_number}"
     )
-    print("Message Sent")
     return message.sid
 
 # Query LocationIQ API and get lat/long
