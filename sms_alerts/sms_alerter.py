@@ -43,18 +43,17 @@ def query_fast_api(location):
 
 # Get AQI Level
 def get_aqi_level(pm_25):
-    if pm_25 <= 12.0:
-        return ("Good", "Air quality is satisfactory and poses little or no risk.")
-    elif pm_25 >12.0 and pm_25 <= 35.4:
-        return ("Moderate", "Sensitive individuals should avoid outdoor activity.")
-    elif pm_25 >35.4 and pm_25 <= 55.4:
-        return ("Unhealthy for Sensitive Groups", "General public and sensitive individuals in particular are at risk of respiratory problems.")
-    elif pm_25 >55.4 and pm_25 <= 150.4:
-        return ("Unhealthy", "Increased likelihood of adverse effects to heart and lungs among the general public.")
-    elif pm_25 >150.4 and pm_25 <= 250.4:
-        return ("Very Unhealthy", "General public will be noticeably affected. Restrict outdoor activities.")
-    else:
-        return ("Hazardous", "General public at high risk of strong adverse affect to heart and lungs. Avoid outdoor activities.")
+    levels = {
+        (0, 12.0): ("Good", "Air quality is satisfactory and poses little or no risk."),
+        (12.1, 35.4): ("Moderate", "Sensitive individuals should avoid outdoor activity."),
+        (35.5, 55.4): ("Unhealthy for Sensitive Groups", "General public and sensitive individuals in particular are at risk of respiratory problems."),
+        (55.5, 150.4): ("Unhealthy", "Increased likelihood of adverse effects to heart and lungs among the general public."),
+        (150.5, float('inf')): ("Hazardous", "General public at high risk of strong adverse affect to heart and lungs. Avoid outdoor activities.")
+    }
+
+    for (lower, upper), (label, message) in levels.items():
+        if lower <= pm_25 <= upper:
+            return (label, message)
 
 def run_script():
     try:
