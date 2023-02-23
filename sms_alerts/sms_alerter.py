@@ -44,11 +44,15 @@ def query_fast_api(location):
 # Get AQI Level
 def get_aqi_level(pm_25):
     levels = {
-        (0, 12.0): ("Good", "Air quality is satisfactory and poses little or no risk."),
-        (12.1, 35.4): ("Moderate", "Sensitive individuals should avoid outdoor activity."),
-        (35.5, 55.4): ("Unhealthy for Sensitive Groups", "General public and sensitive individuals in particular are at risk of respiratory problems."),
-        (55.5, 150.4): ("Unhealthy", "Increased likelihood of adverse effects to heart and lungs among the general public."),
-        (150.5, float('inf')): ("Hazardous", "General public at high risk of strong adverse affect to heart and lungs. Avoid outdoor activities.")
+        (0, 6.0): ("Good Low", "Air quality is deemed acceptable and presents minimal hazard."),
+        (6.0, 12.0): ("Good High", "Individuals who are sensitive should refrain from outdoor activities to prevent respiratory symptoms from occurring."),
+        (12.0, 23.0): ("Moderate Low", "Sensitive individuals, as well as the general public, face the possibility of encountering respiratory issues and irritation."),
+        (23.0, 33.0): ("Moderate High", "The general public is more likely to experience negative impacts and further strain on their heart and lungs."),
+        (33.0, 41.0): ("Unhealthy for Sensitive Groups, Low", "The impact on the general public will be significant, and vulnerable individuals should limit their outdoor activities."),
+        (41.0, 55.0): ("Unhealthy for Sensitive Groups, High", "The general public is highly susceptible to experiencing severe irritations and negative health impacts and is advised to refrain from engaging in outdoor activities."),
+        (55.0, 155.0): ("Unhealthy", "Everyone may begin to experience health effects; members of sensitive groups may experience more serious health effects."),
+        (155.0, 250.0): ("Very Unhealthy", "Health warnings of emergency conditions. The entire population is more likely to be affected."),
+        (250.5, float('inf')): ("Hazardous", "Health alert: everyone may experience more serious health effects. Avoid outdoor activities.")
     }
 
     for (lower, upper), (label, message) in levels.items():
