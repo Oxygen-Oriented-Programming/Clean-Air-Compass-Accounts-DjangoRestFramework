@@ -26,7 +26,7 @@ def send_alert(alert, aqi_level):
     message = client.messages.create(
         body=message,
         from_= twilio_phone_number ,
-        to=phone_number
+        to=f"+1{phone_number}"
     )
     print("Message Sent")
     return message.sid
