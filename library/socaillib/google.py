@@ -19,10 +19,9 @@ class Google:
                 return idinfo
 
         except:
-            for x in range(0,10):
-
+            for x in range(0,2):
                 print(f"attempt to validte {x}")
-                time.sleep(1)
+                time.sleep(2)
                 idinfo = id_token.verify_oauth2_token(auth_token, requests.Request())
                 if 'accounts.google.com' in idinfo['iss']:
                     return idinfo
