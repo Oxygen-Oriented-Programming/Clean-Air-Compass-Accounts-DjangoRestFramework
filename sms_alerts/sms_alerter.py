@@ -57,7 +57,7 @@ def get_aqi_level(pm_25):
 
 def run_script():
     try:
-        print('starting run_script')
+        
         for alert in all_sms_alerts:
             print(alert)
             print(alert.previous_air_quality_threshold_alert)
