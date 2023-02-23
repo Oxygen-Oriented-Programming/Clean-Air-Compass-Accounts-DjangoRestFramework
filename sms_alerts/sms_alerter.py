@@ -55,7 +55,7 @@ def get_aqi_level(pm_25):
 
 def run_script():
     try:
-        print('starting program')
+        
         for alert in all_sms_alerts:
             print(alert)
             location = alert.location
