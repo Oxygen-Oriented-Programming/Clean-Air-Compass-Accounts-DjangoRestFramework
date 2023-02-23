@@ -25,6 +25,7 @@ env = environ.Env(
     TWILIO_PHONE_NUMBER=(str, ""),
     GOOGLE_CLIENT_ID=(str, ""),
     SOCIAL_SECRET=(str, ""),
+    FAST_API_BASE_URL=(str, "")
 )
 
 environ.Env.read_env()
@@ -39,6 +40,9 @@ TWILIO_PHONE_NUMBER=env.str("TWILIO_PHONE_NUMBER")
 # NextAuth Variables
 GOOGLE_CLIENT_ID=env.str("GOOGLE_CLIENT_ID")
 SOCIAL_SECRET=env.str("SOCIAL_SECRET")
+
+# Fast API URL
+FAST_API_BASE_URL=env.str("FAST_API_BASE_URL")
 
 # Application definition
 

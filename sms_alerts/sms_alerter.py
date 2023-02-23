@@ -7,17 +7,17 @@ from twilio.rest import Client
 account_sid = settings.TWILIO_ACCOUNT_SID
 auth_token = settings.TWILIO_AUTH_TOKEN
 twilio_phone_number = settings.TWILIO_PHONE_NUMBER
+fast_api_base_url = settings.FAST_API_BASE_URL
 all_sms_alerts = SmsAlert.objects.all()
 
 def send_alert(alert, aqi_level):
-    print("Preparing Message")
     # Get the user's phone number
     phone_number = alert.phone_number
     
     # Construct the message
     message = dedent(f"""
-        Air quality in {alert.location} is now {aqi_level[0]}.
-        {aqi_level[1]}
+    Air quality in {alert.location} is now {aqi_level[0]}.
+    {aqi_level[1]}
     """)
     
     # Send the message using Twilio or another SMS service
@@ -28,13 +28,12 @@ def send_alert(alert, aqi_level):
         from_= twilio_phone_number ,
         to=f"+1{phone_number}"
     )
-    print("Message Sent")
     return message.sid
 
 # Query LocationIQ API and get lat/long
 def query_fast_api(location):
 
-    url = f"https://dolphin-app-ebj76.ondigitalocean.app/average_pollution/{location.lower()}"
+    url = fast_api_base_url + "average_pollution/" + location.lower()
 
     response = requests.get(url)
     
@@ -56,28 +55,23 @@ def get_aqi_level(pm_25):
     }
 
     for (lower, upper), (label, message) in levels.items():
-        if lower <= pm_25 <= upper:
+        if lower < pm_25 <= upper:
             return (label, message)
 
 def run_script():
     try:
         
         for alert in all_sms_alerts:
-            print(alert)
-            print(alert.previous_air_quality_threshold_alert)
             location = alert.location
             latest_pm_25 = query_fast_api(location)
             aqi_level = get_aqi_level(latest_pm_25)
-            print(aqi_level, alert.previous_air_quality_threshold_alert)
+            
             if aqi_level != alert.previous_air_quality_threshold_alert:
                 print("Updating AQI in database")
                 alert.previous_air_quality_threshold_alert = aqi_level
                 alert.save()
 
-                print("sending message")
                 send_alert(alert, aqi_level)
-                print("message sent")
-            print("next alert")
     
     except Exception as e:
         print(e)
