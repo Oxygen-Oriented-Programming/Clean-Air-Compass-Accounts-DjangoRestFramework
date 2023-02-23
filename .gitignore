@@ -127,3 +127,7 @@ poetry.lock
 #django
 
 db.sqlite3
+*/migrations
+*/migrations/*
+
+.json
