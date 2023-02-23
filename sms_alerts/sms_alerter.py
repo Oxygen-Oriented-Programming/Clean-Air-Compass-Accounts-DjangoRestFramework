@@ -17,8 +17,8 @@ def send_alert(alert, aqi_level):
     
     # Construct the message
     message = dedent(f"""
-        Air quality in {alert.location} is now {aqi_level[0]}.
-        {aqi_level[1]}
+    Air quality in {alert.location} is now {aqi_level[0]}.
+    {aqi_level[1]}
     """)
     
     # Send the message using Twilio or another SMS service
