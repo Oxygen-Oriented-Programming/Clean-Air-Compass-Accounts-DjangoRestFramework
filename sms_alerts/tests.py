@@ -38,6 +38,7 @@ class SmsAlertTest(TestCase):
             from_=mock_client_instance.twilio_phone_number,
             body=message
         )
+        
     @patch('sms_alerts.models.TwilioClient')
     @override_settings(TWILIO_AUTH_TOKEN=None)
     def test_send_message_on_creation_with_missing_twilio_credentials(self, MockTwilioClient):
