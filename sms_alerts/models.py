@@ -35,10 +35,10 @@ class SmsAlert(models.Model):
             if not account_sid or not auth_token or not twilio_phone_number:
                 raise ImproperlyConfigured('Twilio credentials not set')
 
-            client = TwilioClient(account_sid, auth_token, twilio_phone_number)
+            twilio_client = TwilioClient(account_sid, auth_token, twilio_phone_number)
         
-        client.send_message(
+        twilio_client.send_message(
             to=self.phone_number,
-            from_=twilio_phone_number,
+            from_=twilio_client.twilio_phone_number,
             body=message
         )
