@@ -37,5 +37,6 @@ class SmsAlertList(ListCreateAPIView):
 
 
 class SmsAlertDetail(RetrieveUpdateDestroyAPIView):
+    permission_classes = (IsAuthenticated,)
     queryset = SmsAlert.objects.all()
     serializer_class = SmsAlertSerializer
