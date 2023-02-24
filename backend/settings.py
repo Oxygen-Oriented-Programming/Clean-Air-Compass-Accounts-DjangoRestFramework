@@ -25,6 +25,7 @@ env = environ.Env(
     TWILIO_PHONE_NUMBER=(str, ""),
     GOOGLE_CLIENT_ID=(str, ""),
     SOCIAL_SECRET=(str, ""),
+    FAST_API_BASE_URL=(str, "")
 )
 
 environ.Env.read_env()
@@ -39,6 +40,9 @@ TWILIO_PHONE_NUMBER=env.str("TWILIO_PHONE_NUMBER")
 # NextAuth Variables
 GOOGLE_CLIENT_ID=env.str("GOOGLE_CLIENT_ID")
 SOCIAL_SECRET=env.str("SOCIAL_SECRET")
+
+# Fast API URL
+FAST_API_BASE_URL=env.str("FAST_API_BASE_URL")
 
 # Application definition
 
@@ -141,10 +145,6 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-
-GOOGLE_CLIENT_ID = '319185773405-94lfgudji11fvtbrckkfsj4r7rpuaalv.apps.googleusercontent.com'
-SOCIAL_SECRET = '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'
 
 CORS_ORIGIN_ALLOW_ALL = True
 
