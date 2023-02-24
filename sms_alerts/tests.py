@@ -1,7 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from sms_alerts.models import SmsAlert
 from accounts.models import User
-
+from django.core.exceptions import ImproperlyConfigured
+from unittest.mock import patch
+from django.conf import settings
 
 class SmsAlertTest(TestCase):
 
@@ -25,3 +27,28 @@ class SmsAlertTest(TestCase):
     def test_sms_alert_string_representation(self):
         expected_string = f'{self.user.username} - Seattle - AQI Good'
         self.assertEqual(str(self.sms_alert), expected_string)
+
+    @patch('sms_alerts.models.TwilioClient')
+    def test_send_message_on_creation(self, MockTwilioClient):
+        message = 'Test Message'
+        mock_client_instance = MockTwilioClient.return_value
+        self.sms_alert.send_message_on_creation(message, twilio_client=mock_client_instance)
+        mock_client_instance.send_message.assert_called_once_with(
+            to=self.sms_alert.phone_number,
+            from_=mock_client_instance.twilio_phone_number,
+            body=message
+        )
+        
+    @patch('sms_alerts.models.TwilioClient')
+    @override_settings(TWILIO_AUTH_TOKEN=None)
+    def test_send_message_on_creation_with_missing_twilio_credentials(self, MockTwilioClient):
+        with self.assertRaises(ImproperlyConfigured):
+            MockTwilioClient = None
+            message = 'Test Message'
+            mock_client_instance = MockTwilioClient
+            self.sms_alert.send_message_on_creation(message, twilio_client=mock_client_instance)
+            mock_client_instance.send_message.assert_called_once_with(
+                to=self.sms_alert.phone_number,
+                from_=mock_client_instance.twilio_phone_number,
+                body=message
+            )
