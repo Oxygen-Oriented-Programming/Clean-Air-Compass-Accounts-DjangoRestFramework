@@ -1,7 +1,7 @@
 import requests
 from textwrap import dedent
 from django.conf import settings
-from .models import SmsAlert
+from .models import SmsAlert, TwilioClient
 from twilio.rest import Client
 
 account_sid = settings.TWILIO_ACCOUNT_SID
@@ -22,8 +22,8 @@ def send_alert(alert, aqi_level):
     
     # Send the message using Twilio or another SMS service
 
-    client = Client(account_sid, auth_token)
-    message = client.messages.create(
+    client = TwilioClient(account_sid, auth_token, twilio_phone_number)
+    message = client.send_message(
         body=message,
         from_= twilio_phone_number ,
         to=f"+1{phone_number}"
