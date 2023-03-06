@@ -1,4 +1,7 @@
 from django.contrib import admin
 from .models import *
 
-admin.site.register(DefaultLocation)
+class DefaultLocationAdmin(admin.ModelAdmin):
+    list_display = ('user', 'default_location')
+
+admin.site.register(DefaultLocation, DefaultLocationAdmin)
