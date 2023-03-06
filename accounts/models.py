@@ -2,8 +2,6 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractUser
 
-
-# This table is used for signup, login, and authentication process.
 class User(AbstractUser):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=20, blank=True)
@@ -22,8 +20,5 @@ class User(AbstractUser):
     auth_provider = models.CharField(max_length=50, blank=True, default="email")
 
     def __str__(self):
-            return f"{self.first_name} {self.last_name}"
+            return self.email
 
-    class Meta:
-        ordering = ['last_name', 'first_name']
-        verbose_name_plural = 'users'
